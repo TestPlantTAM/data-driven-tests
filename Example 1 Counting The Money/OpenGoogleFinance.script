@@ -1,0 +1,13 @@
+// Called Script: OpenGoogleFinance.script
+//This script opens Google finance page and gathers coordinates of search box for use //during ticker symbol searches.
+
+//Navigate to finance page
+
+DoubleClick "google chrome"
+WaitFor 30.0, "Lucky Button"
+Click "More"
+Click "Finance"
+//Gather coordinates of search box for repeated google searches
+
+WaitFor 30.0, "Search Finance"
+Put FoundImageLocation() into global FinanceButton

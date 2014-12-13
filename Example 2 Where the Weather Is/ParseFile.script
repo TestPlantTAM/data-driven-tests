@@ -1,0 +1,29 @@
+//Called Script: ParseFile.script
+
+<!--
+//This script takes a file name as a parameter and parses the data file into a list of city objects.
+
+//The data file format:
+
+//Each line in the data file represents a city.
+//The data in the file must be formatted accordingly: [zip code]	[corresponding city]	[corresponding state]
+//Example: 92101 San Diego CA 
+-->
+
+params cityData
+// for every line in the data file
+
+repeat with data = each line of file cityData	
+	
+// get the zip, city, and state
+
+	put word 1 of data into zip
+	put word 2 to -2 of data into venue
+	put last word of data into state
+	
+// make a new city object
+
+	insert new City with (name:venue, state:state, zip:zip) into cities
+end repeat
+return cities
+// end ParseFile.script

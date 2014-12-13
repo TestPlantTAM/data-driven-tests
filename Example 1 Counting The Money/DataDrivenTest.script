@@ -1,0 +1,41 @@
+//Main Script: DataDrivenTest.script
+
+
+//Run script to navigate to Google Finance page
+
+OpenGoogleFinance
+//Load variable with data file
+
+Put file "/PATH/TO/FILE/Ticker Symbols.txt" into datafile   
+//loads data into variable 'datafile'
+
+//Perform ticker symbol search for each company and log price for output
+
+Repeat with each line myline of line 2 to -1 of datafile  
+//starts with line 2 to skip titles
+
+		DoubleClick global FinanceButton 
+	TypeText item 1 of myline  
+//enters in the ticker symbol
+
+	Click "Magnifying Glass"  
+//performs search
+
+	Wait 2.0
+	WaitFor 20.0, "Refresh"
+	WaitFor 30.0, "Top Left"
+	Wait 2.0
+	Put ReadText ("Top Left", "Bottom Right", validcharacters: "1234567890.") into price  
+//use OCR to read current share price
+
+	put price
+	put item 2 of myline && price & return after output  
+//use Company Name and price in output
+
+End Repeat
+//Close browser
+
+Click "Close Finance"
+//print results
+
+Put output

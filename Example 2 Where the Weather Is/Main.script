@@ -1,0 +1,64 @@
+//Main Script: Main.script
+
+<!--
+//This set of scripts reads zip codes from a data file, and enters them into Weather.com.
+
+//Information contained on Weather.com is then validated using OCR and comparing the results to expected //results in the data file.
+
+//Test Specifications:
+
+//SUT Platform: Windows 7
+//Browser: Mozilla Firefox
+//SUT Requisites: This script assumes that the Weather.com home page is already loaded in FireFox.  
+-->
+
+
+put items 1 to -2  delimited by "/" of my folder into SuiteFolder
+// Get data from cities data file
+
+put ParseFile(SuiteFolder & "/cities.txt") into cities
+// Put cityList
+
+repeat with each cityRecord of cities
+	
+// Get the city zip code
+
+	put cityRecord's zip into zip
+	
+// Click in Weather.com's Search field
+
+	Click "SearchField"
+	
+// Enter the zip code
+
+	Typetext zip, ENTER
+	Wait 5
+	
+// Wait for weather.com to load the next page
+
+	waitFor 30, "Weather"
+	
+// If weather.com has recognized the zip
+
+	if imagefound("LocalTL") then
+		
+// Use OCR to read the text
+
+		Put ReadText("LocalTL","LocalBR") into FoundCity
+		
+// Verify that the city, state and zip information displayed is correct
+
+		if FoundCity contains cityRecord
+			Log "Forecast for " & cityRecord & " displayed successfully"
+		else
+			LogError result & " invalid: expected result was " & cityRecord
+		end if
+	else if imageFound("NoResultsFound") then
+		
+// Do nothing
+
+	else
+		LogError  "Cannot process zip"
+	end if
+end repeat
+// End weather.script
